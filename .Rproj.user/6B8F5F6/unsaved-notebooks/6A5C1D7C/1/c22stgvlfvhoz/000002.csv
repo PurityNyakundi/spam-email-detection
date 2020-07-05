@@ -1,0 +1,2 @@
+"0","#begin by impoting the dataset"
+"0","sms_raw <- read.csv(""spam.csv"", stringsAsFactors = FALSE)"

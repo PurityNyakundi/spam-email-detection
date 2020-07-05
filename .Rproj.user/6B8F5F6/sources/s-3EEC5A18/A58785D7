@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1593954498604.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1143269819",
+    "id" : "A58785D7",
+    "lastKnownWriteTime" : 1593956053,
+    "last_content_update" : 1593956053514,
+    "path" : "D:/codebase/SpamAnalysis/spam.Rmd",
+    "project_path" : "spam.Rmd",
+    "properties" : {
+        "cursorPosition" : "4,14",
+        "last_setup_crc32" : "3EEC5A18c0894c23",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

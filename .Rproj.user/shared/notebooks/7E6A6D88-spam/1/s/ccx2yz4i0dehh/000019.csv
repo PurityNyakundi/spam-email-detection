@@ -1,0 +1,5 @@
+"0","#subset ham and spam to check their words in the word cloud"
+"0","spam <- subset(sms_raw_train, v1 == ""spam"")"
+"0","#Next, we'll do the same thing for the ham subset:"
+"0","ham <- subset(sms_raw_train, v1 == ""ham"")"
+"0","head(spam)"

@@ -1,0 +1,5 @@
+"0","#apply the most freq words"
+"0","sms_train <- DocumentTermMatrix(sms_corpus_train,"
+"0","                                list(dictionary = myterms))"
+"0","sms_test <- DocumentTermMatrix(sms_corpus_test,list(dictionary = myterms))"
+"0",""

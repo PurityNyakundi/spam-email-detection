@@ -1,0 +1,138 @@
+---
+title: "spam detection"
+author: "Purity"
+date: "05/07/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+#begin by impoting the dataset
+sms_raw <- read.csv("spam.csv", stringsAsFactors = FALSE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+#check the structure
+str(sms_raw)
+
+```
+```{r}
+#change the type or v1 into caartegorical variable
+sms_raw$v1<-as.factor(sms_raw$v1)
+```
+```{r}
+#study the target variable
+table(sms_raw$v1)
+```
+```{r}
+#use the text mining package to preprocess data for analysis
+library(tm)
+#first create a corpus for each single string
+sms_corpus <- VCorpus(VectorSource(sms_raw$v2))
+sms_corpus
+lapply(sms_corpus[4:7], as.character)
+```
+```{r}
+#next we do text cleaning
+#convert each text to lower for uniformity so that "Word" will not be different as "word"
+corpus_clean <- tm_map(sms_corpus, content_transformer(tolower))
+#next we remove numbers
+corpus_clean <- tm_map(corpus_clean, removeNumbers)
+inspect(corpus_clean)
+
+#next we remove stop words such as but or
+corpus_clean <- tm_map(corpus_clean, removeWords, stopwords())
+#next we remove punctuation
+corpus_clean <- tm_map(corpus_clean, removePunctuation)
+#we remove white spaces and leave the single whitespace
+corpus_clean <- tm_map(corpus_clean, stripWhitespace)
+lapply(corpus_clean[4:7], as.character)
+```
+```{r}
+#next we split strings to sigle words called tokens
+
+
+sms_dtm2 <- DocumentTermMatrix(sms_corpus, control = list(
+  tolower = TRUE,
+  removeNumbers = TRUE,
+  stopwords = TRUE,
+  removePunctuation = TRUE,
+  stemming = TRUE
+))
+sms_dtm2
+
+```
+```{r}
+#next we do data preparation spliting the data into train and test
+#first split raw data
+sms_raw_train <- sms_raw[1:4169, ]
+sms_raw_test <- sms_raw[4170:5559, ]
+#Then the document-term matrix:
+ sms_dtm_train <- sms_dtm2[1:4169, ]
+sms_dtm_test <- sms_dtm2[4170:5559, ]
+#And finally, the corpus:
+sms_corpus_train <- corpus_clean[1:4169]
+sms_corpus_test <- corpus_clean[4170:5559]
+#next visualize the data
+#we use a wordcloud
+library(wordcloud)
+wordcloud(sms_corpus_train, min.freq = 40, random.order= F,max.words = 40)
+
+
+```
+```{r}
+#subset ham and spam to check their words in the word cloud
+spam <- subset(sms_raw_train, v1 == "spam")
+#Next, we'll do the same thing for the ham subset:
+ham <- subset(sms_raw_train, v1 == "ham")
+head(spam)
+wordcloud(spam$v2, max.words = 40, scale = c(2, 0.5),min.freq = 40)
+wordcloud(ham$v2, max.words = 40, scale = c(2, 0.5),min.freq = 40)
+
+```
+```{r}
+#create frequent occuring words
+myterms<-as.vector(findFreqTerms(sms_dtm_train, 5))
+head(myterms)
+```
+```{r}
+#apply the most freq words
+sms_train <- DocumentTermMatrix(sms_corpus_train,
+                                list(dictionary = myterms))
+sms_test <- DocumentTermMatrix(sms_corpus_test,list(dictionary = myterms))
+
+```
+
+
+```{r}
+convert_counts <- function(x) {
+  x <- ifelse(x > 0, "Yes", "No")
+}
+sms_train <- apply(sms_train, MARGIN = 2, convert_counts)
+sms_test <- apply(sms_test, MARGIN = 2, convert_counts)
+head(sms_train)
+```
+```{r}
+head(sms_test)
+```
+```{r}
+#next train the model or do modelling
+library(e1071)
+sms_classifier <- naiveBayes(sms_train, sms_raw_train$v1)
+#then make prediction
+sms_test_pred <- predict(sms_classifier, sms_test)
+#create a cross table to check perfomance
+library(gmodels)
+CrossTable(sms_test_pred, sms_raw_test$v1,
+             prop.chisq = FALSE, prop.t = FALSE,
+             dnn = c('predicted', 'actual'))
+library(caret)
+confusionMatrix(sms_test_pred,sms_raw_test$v1)
+
+```
+#performs well

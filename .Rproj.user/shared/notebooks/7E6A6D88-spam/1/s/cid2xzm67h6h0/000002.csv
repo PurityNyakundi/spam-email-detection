@@ -1,0 +1,21 @@
+"0","#next we split strings to sigle words called tokens"
+"0",""
+"0",""
+"0","sms_dtm2 <- DocumentTermMatrix(sms_corpus, control = list("
+"0","  tolower = TRUE,"
+"0","  removeNumbers = TRUE,"
+"0","  stopwords = TRUE,"
+"0","  removePunctuation = TRUE,"
+"0","  stemming = TRUE"
+"0","))"
+"0","sms_dtm2"
+"1","<<DocumentTermMatrix (documents: 5572, terms: 6935)>>
+"
+"1","Non-/sparse entries: 43489/38598331
+"
+"1","Sparsity           : 100%
+"
+"1","Maximal term length: 40
+"
+"1","Weighting          : term frequency (tf)
+"

@@ -1,0 +1,2 @@
+"0","#change the type or v1 into caartegorical variable"
+"0","sms_raw$v1<-as.factor(sms_raw$v1)"
